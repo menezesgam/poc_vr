@@ -2,9 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 
-public class ConnectScript : NetworkManager {
-
-    public GameObject playerprefab;
+public class LobbyManager : NetworkLobbyManager {
 
 	// Use this for initialization
 	void Start () {
@@ -16,17 +14,13 @@ public class ConnectScript : NetworkManager {
 	void Update () {
 	    if (Input.GetKeyDown(KeyCode.G))
         {
-            NetworkManager.singleton.StartServer();
-        }else if (Input.GetKeyDown(KeyCode.L))
+            NetworkLobbyManager.singleton.StartServer();
+        }
+        else if (Input.GetKeyDown(KeyCode.L))
         {
-            NetworkManager.singleton.StartClient();
+            NetworkLobbyManager.singleton.StartClient();
         }
 	}
-
-    void StartMyServer()
-    {
-        StartServer();
-    }
 
     public override void  OnStartServer()
     {
@@ -37,6 +31,7 @@ public class ConnectScript : NetworkManager {
     {
         print("client");
     }
+
 
 
 }
