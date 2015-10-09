@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
-public class InteractiveObject : MonoBehaviour {
+public class InteractiveObject : NetworkBehaviour {
 
     /* Possible actions to interact with object */
     public enum InteractiveObjectAction {ROTATE, ZOOM, MOVE, NO_ACTION}
@@ -10,6 +11,9 @@ public class InteractiveObject : MonoBehaviour {
    // private Vector3 lastMousePosition;
     private SavingTransform objectInitialState;
 
+    /*Scale to propagate through network*/
+    [SyncVar]
+    private Vector3 objectZoom;
 
 	// Use this for initialization
 	void Start () {
@@ -19,13 +23,18 @@ public class InteractiveObject : MonoBehaviour {
         objectInitialState.Rotation = new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w);
         objectInitialState.Scale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
 
+        objectZoom = transform.localScale;
         currentAction = InteractiveObjectAction.NO_ACTION;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        GetInputForAction();
-        TakeAction();
+        if (isServer)
+        {
+            GetInputForAction();
+            TakeAction();
+        }
+        UpdateZoom();
        // lastMousePosition = Input.mousePosition;
     }
 
@@ -83,7 +92,7 @@ public class InteractiveObject : MonoBehaviour {
         }
     }
 
-    private void RotateObject(Vector3 mouseSpeed)
+    public void RotateObject(Vector3 mouseSpeed)
     {
         print("ROTATE");
         if (Mathf.Abs(mouseSpeed.x) > Mathf.Abs(mouseSpeed.y))
@@ -96,31 +105,36 @@ public class InteractiveObject : MonoBehaviour {
         }
     }
 
-    private void ZoomObject(Vector3 mouseSpeed)
+    public void ZoomObject(Vector3 mouseSpeed)
     {
         print("ZOOM");
         Vector3 nextScale = new Vector3(transform.localScale.x + mouseSpeed.x / 2, transform.localScale.y + mouseSpeed.x / 2, transform.localScale.z + mouseSpeed.x / 2);
-        transform.localScale = Vector3.Lerp(transform.localScale, nextScale, Time.deltaTime * 0.5f);
+        objectZoom = Vector3.Lerp(transform.localScale, nextScale, Time.deltaTime * 0.5f);
     }
 
-    /*Still needs to consider rotation*/
-    private void MoveObject(Vector3 mouseSpeed)
+    /*NetworkTransform doesn't carry localScale values through network, we need to update it using a [sync] var*/
+    private void UpdateZoom()
     {
-        print("MOVE");
+        transform.localScale = objectZoom;
+    }
+
+    public void MoveObject(Vector3 mouseSpeed)
+    {
         float moveSpeed = 0.010f;
         Vector3 test = Vector3.right * moveSpeed * mouseSpeed.x + Vector3.up * moveSpeed * mouseSpeed.y;
         transform.Translate(test, Space.World);
+        print("Move with: " + mouseSpeed + " I was: " + transform.position + " going to: " + test);
     }
 
     /*
         Reset object with initial state
     */
-    private void ResetObjectState()
+    public void ResetObjectState()
     {
         print("RESET");
         transform.position = new Vector3(objectInitialState.Position.x, objectInitialState.Position.y, objectInitialState.Position.z);
         transform.rotation = new Quaternion(objectInitialState.Rotation.x, objectInitialState.Rotation.y, objectInitialState.Rotation.z, objectInitialState.Rotation.w);
-        transform.localScale = new Vector3(objectInitialState.Scale.x, objectInitialState.Scale.y, objectInitialState.Scale.z);
+        objectZoom = new Vector3(1f, 1f, 1f);
     }
 
 }
