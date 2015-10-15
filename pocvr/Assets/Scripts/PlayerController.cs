@@ -39,36 +39,24 @@ public class PlayerController : NetworkBehaviour
     */
     private void GetInputForAction()
     {
-        Vector3 mousePosition = new Vector3(Input.GetAxis("Mouse X") / Time.deltaTime, Input.GetAxis("Mouse Y") / Time.deltaTime);
+        Vector3 mouseSpeed = new Vector3(Input.GetAxis("Mouse X") / Time.deltaTime, Input.GetAxis("Mouse Y") / Time.deltaTime);
 
         if (Input.GetKey(KeyCode.R))
         {
-            CmdRotateObject(mousePosition);
+            CmdRotateObject(mouseSpeed*3);
         }
         else if (Input.GetKey(KeyCode.Z))
         {
-            CmdZoomObject(mousePosition);
+            CmdZoomObject(mouseSpeed*2);
         }
         else if (Input.GetKey(KeyCode.M))
         {
-            CmdMoveObject(mousePosition);
+            CmdMoveObject(mouseSpeed*3);
         }
         else if (Input.GetKey(KeyCode.Escape))
         {
             //decide if keep currentaction or just reset.
             CmdResetObjectState();
-        }
-    }
-
-    private void RotateObject(Vector3 mouseSpeed)
-    {
-        if (Mathf.Abs(mouseSpeed.x) > Mathf.Abs(mouseSpeed.y))
-        {
-            transform.Rotate(new Vector3(mouseSpeed.x / 3, 0, 0));
-        }
-        else
-        {
-            transform.Rotate(new Vector3(0, 0, mouseSpeed.y / 3));
         }
     }
 
