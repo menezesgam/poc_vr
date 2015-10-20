@@ -87,14 +87,12 @@ public class InteractiveObject : NetworkBehaviour {
                 MoveObject(mousePosition);
                 break;
             default:
-                print("NO ACTION");
                 break;
         }
     }
 
     public void RotateObject(Vector3 mouseSpeed)
     {
-        print("ROTATE");
         if (Mathf.Abs(mouseSpeed.x) > Mathf.Abs(mouseSpeed.y))
         {
             transform.Rotate(new Vector3(mouseSpeed.x / 3, 0, 0));
@@ -107,7 +105,6 @@ public class InteractiveObject : NetworkBehaviour {
 
     public void ZoomObject(Vector3 mouseSpeed)
     {
-        print("ZOOM");
         Vector3 nextScale = new Vector3(transform.localScale.x + mouseSpeed.x / 2, transform.localScale.y + mouseSpeed.x / 2, transform.localScale.z + mouseSpeed.x / 2);
         objectZoom = Vector3.Lerp(transform.localScale, nextScale, Time.deltaTime * 0.5f);
     }
