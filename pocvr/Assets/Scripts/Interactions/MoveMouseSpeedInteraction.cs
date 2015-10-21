@@ -15,7 +15,7 @@ public class MoveMouseSpeedInteraction : AbstractInteraction<Vector2> {
     protected override Vector2 GetInput()
     {
         //Maybe change to Vector3 and use mousewheel to control distance to camera
-        return new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        return X360ControllerConstants.GetLeftStickAsVector2();
     }
 
     protected override bool ToggleIsInteracting()

@@ -2,22 +2,24 @@
 using UnityEngine.Networking;
 using System.Collections;
 
-public class InteractiveObject : NetworkBehaviour {
+public class InteractiveObject : NetworkBehaviour
+{
 
     /* Possible actions to interact with object */
-    public enum InteractiveObjectAction {ROTATE, ZOOM, MOVE, NO_ACTION}
+    public enum InteractiveObjectAction { ROTATE, ZOOM, MOVE, NO_ACTION }
 
     private InteractiveObjectAction currentAction;
-   // private Vector3 lastMousePosition;
+    // private Vector3 lastMousePosition;
     private SavingTransform objectInitialState;
 
     /*Scale to propagate through network*/
     [SyncVar]
     private Vector3 objectZoom;
 
-	// Use this for initialization
-	void Start () {
-       // lastMousePosition = Input.mousePosition;
+    // Use this for initialization
+    void Start()
+    {
+        // lastMousePosition = Input.mousePosition;
         objectInitialState = new SavingTransform();
         objectInitialState.Position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         objectInitialState.Rotation = new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w);
@@ -25,17 +27,18 @@ public class InteractiveObject : NetworkBehaviour {
 
         objectZoom = transform.localScale;
         currentAction = InteractiveObjectAction.NO_ACTION;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         if (isServer)
         {
             GetInputForAction();
             TakeAction();
         }
         UpdateZoom();
-       // lastMousePosition = Input.mousePosition;
+        // lastMousePosition = Input.mousePosition;
     }
 
     /*
@@ -50,17 +53,20 @@ public class InteractiveObject : NetworkBehaviour {
         if (Input.GetKeyDown(KeyCode.R))
         {
             currentAction = InteractiveObjectAction.ROTATE;
-        }else if (Input.GetKeyDown(KeyCode.Z))
+        }
+        else if (Input.GetKeyDown(KeyCode.Z))
         {
             currentAction = InteractiveObjectAction.ZOOM;
         }
         else if (Input.GetKeyDown(KeyCode.M))
         {
             currentAction = InteractiveObjectAction.MOVE;
-        }else if (Input.GetKeyDown(KeyCode.Space))
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
         {
             currentAction = InteractiveObjectAction.NO_ACTION;
-        }else if (Input.GetKeyDown(KeyCode.Escape))
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
         {
             //decide if keep currentaction or just reset.
             currentAction = InteractiveObjectAction.NO_ACTION;
@@ -74,7 +80,7 @@ public class InteractiveObject : NetworkBehaviour {
     private void TakeAction()
     {
         //Vector3 mousePosition = Input.mousePosition;
-        Vector3 mousePosition = new Vector3(Input.GetAxis("Mouse X")/Time.deltaTime, Input.GetAxis("Mouse Y")/Time.deltaTime);
+        Vector3 mousePosition = new Vector3(Input.GetAxis("Mouse X") / Time.deltaTime, Input.GetAxis("Mouse Y") / Time.deltaTime);
         switch (currentAction)
         {
             case InteractiveObjectAction.ROTATE:
@@ -119,8 +125,9 @@ public class InteractiveObject : NetworkBehaviour {
     {
         float moveSpeed = 0.010f;
         Vector3 test = Vector3.right * moveSpeed * mouseSpeed.x + Vector3.up * moveSpeed * mouseSpeed.y;
-        transform.Translate(test, Space.World);
-        print("Move with: " + mouseSpeed + " I was: " + transform.position + " going to: " + test);
+        Vector3 test2 = new Vector3(X360ControllerConstants.GetLeftStickX() / 4, X360ControllerConstants.GetLeftStickY() / 4, 0);
+        LGVRUtil.Log("Move with: " + mouseSpeed + " I was: " + transform.position + " going to: " + test);
+        transform.Translate(test2);
     }
 
     /*
@@ -128,7 +135,7 @@ public class InteractiveObject : NetworkBehaviour {
     */
     public void ResetObjectState()
     {
-        print("RESET");
+        LGVRUtil.Log("RESET");
         transform.position = new Vector3(objectInitialState.Position.x, objectInitialState.Position.y, objectInitialState.Position.z);
         transform.rotation = new Quaternion(objectInitialState.Rotation.x, objectInitialState.Rotation.y, objectInitialState.Rotation.z, objectInitialState.Rotation.w);
         objectZoom = new Vector3(1f, 1f, 1f);

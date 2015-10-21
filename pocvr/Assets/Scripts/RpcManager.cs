@@ -17,7 +17,7 @@ public class RpcManager : NetworkBehaviour
     */
     private void UpdateFbxObject()
     {
-        if (fbxObj.lastUpdate.ChangeSavingTransform(fbxObj.gameObject.transform))
+        if ( fbxObj != null && fbxObj.lastUpdate.ChangeSavingTransform(fbxObj.gameObject.transform))
         {
             //if the object's lastUpdate is changed, set dirty bit to serialize new data
             SetDirtyBit(1);
