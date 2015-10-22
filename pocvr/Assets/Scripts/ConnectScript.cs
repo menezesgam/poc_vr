@@ -30,12 +30,12 @@ public class ConnectScript : NetworkManager {
 
     public override void  OnStartServer()
     {
-        print("Server");
+        LGVRUtil.Log("OnStartServer");
     }
 
     public override void OnStartClient(NetworkClient client)
     {
-        print("client");
+        LGVRUtil.Log("OnStartClient");
     }
 
 

@@ -13,22 +13,25 @@ public static class X360ControllerConstants
     //LEFT
     public const string LEFT_STICK_X = "Horizontal";
     public const string LEFT_STICK_Y = "Vertical";
-    public const string LEFT_TRIGGER = "LeftTrigger";
+    public const string LEFT_TRIGGER = "TriggerLeft";
 
     //RIGHT
     public const string RIGHT_STICK_X = "HorizontalRight";
     public const string RIGHT_STICK_Y = "VerticalRight";
-    public const string RIGHT_TRIGGER = "RightTrigger";
+    public const string RIGHT_TRIGGER = "TriggerRight";
+
     /* BUTTONS */
+    //LEFT
+    public const string LEFT_BUMPER = "BumperLeft";
 
+    //RIGHT
+    public const string RIGHT_BUMPER = "BumperRight";
 
-
-
+    //Utility
+    public const string BACK_BUTTON = "BackButton";
+    public const string START_BUTTON = "StartButton";
     //LEFT---------------------------------------------------------------------------------------------------------//
 
-    /*
-        Get Left stick horizontal value
-    */
     public static float GetLeftStickX()
     {
         float value = Input.GetAxis(LEFT_STICK_X);
@@ -36,9 +39,6 @@ public static class X360ControllerConstants
         return value;
     }
 
-    /*
-        Get Left stick vertical value
-    */
     public static float GetLeftStickY()
     {
         float value = Input.GetAxis(LEFT_STICK_Y);
@@ -56,32 +56,35 @@ public static class X360ControllerConstants
         return value;
     }
 
-    /*
-        Get Left Trigger value
-    */
-    public static float GetLeftTrigger()
+    public static float GetTriggerLeft()
     {
         float value = Input.GetAxis(LEFT_TRIGGER);
-        LGVRUtil.Log("GetLeftTrigger :: " + value);
+        LGVRUtil.Log("GetTriggerLeft :: " + value);
         return value;
     }
 
-    //RIGHT---------------------------------------------------------------------------------------------------------//
-
-    /*
-        Get Right stick horizontal value
-    */
-    public static float GetRightStickX()
+    public static bool GetBumperLeft()
     {
-        return Input.GetAxis(RIGHT_STICK_X);
+        bool value = Input.GetButton(LEFT_BUMPER);
+        LGVRUtil.Log("GetBumperLeft :: " + value);
+        return value;
     }
 
-    /*
-        Get Right stick vertical value
-    */
+
+    //RIGHT---------------------------------------------------------------------------------------------------------//
+
+    public static float GetRightStickX()
+    {
+        float value = Input.GetAxis(RIGHT_STICK_X);
+        LGVRUtil.Log("GetRightStickX :: " + value);
+        return value;
+    }
+
     public static float GetRightStickY()
     {
-        return Input.GetAxis(RIGHT_STICK_Y);
+        float value = Input.GetAxis(RIGHT_STICK_Y);
+        LGVRUtil.Log("GetRightStickY :: " + value);
+        return value;
     }
 
     /*
@@ -89,10 +92,39 @@ public static class X360ControllerConstants
     */
     public static Vector2 GetRightStickAsVector2()
     {
-        return new Vector2(GetRightStickX(), GetRightStickY());
+        Vector2 value = new Vector2(GetRightStickX(), GetRightStickY());
+        LGVRUtil.Log("GetRightStickAsVector2 :: " + value);
+        return value;
     }
 
+    public static float GetTriggerRight()
+    {
+        float value = Input.GetAxis(RIGHT_TRIGGER);
+        LGVRUtil.Log("GetTriggerRight :: " + value);
+        return value;
+    }
 
+    public static bool GetBumperRight()
+    {
+        bool value = Input.GetButton(RIGHT_BUMPER);
+        LGVRUtil.Log("GetBumperRight :: " + value);
+        return value;
+    }
 
+    //Utility
+
+    public static bool GetButtonStart()
+    {
+        bool value = Input.GetButton(START_BUTTON);
+        LGVRUtil.Log("GetButtonStart :: " + value);
+        return value;
+    }
+
+    public static bool GetButtonBack()
+    {
+        bool value = Input.GetButton(BACK_BUTTON);
+        LGVRUtil.Log("GetBackButton :: " + value);
+        return value;
+    }
 
 }
